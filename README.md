@@ -1,8 +1,8 @@
 # Tracking yours doing every hour.
 
 ```bash
-py -m venv env # init env
-./env/Scripts/activate # activate env
+py -m venv env 
+./env/Scripts/activate 
 
-pip install -r requirements.txt # install need packages
+pip install -r requirements.txt 
 ```
