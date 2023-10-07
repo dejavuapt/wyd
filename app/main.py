@@ -78,7 +78,7 @@ if __name__ == '__main__':
     stop_callback_handler = CommandHandler('stop_callback', stop_callback)
     application.add_handler(stop_callback_handler)
 
-    timer_handler = CommandHandler('oneday', callback_daily)
+    timer_handler = CommandHandler('start_callback', callback_daily)
     application.add_handler(timer_handler)
 
     
