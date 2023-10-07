@@ -6,3 +6,7 @@ py -m venv env
 
 pip install -r requirements.txt 
 ```
+
+also you need a file with your token
+just take `template_constants.py` to `app/constants.py`
+and rename str to your TG bot token
