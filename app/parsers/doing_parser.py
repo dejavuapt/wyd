@@ -1,10 +1,12 @@
 
 import csv;
+import os;
 
 class DoingParser:
 
     def __init__(self, doing_string: str, sign: str = '|') -> None:
         self.separate_string: list = doing_string.split(sign)
+        print(self.separate_string)
         self.sep:str = ';'
 
     def ParseTime(self) -> str:
@@ -26,14 +28,17 @@ class DoingParser:
     
 
     def CreateTimeDoingStroke(self) -> str:
-        return self.ParseTime() + self.sep + self.ParseDoing() + self.sep + self.sep
+        return self.ParseTime() + self.sep + self.ParseDoing() + self.sep + self.sep + "\n"
     
     def CreateFlagsStroke(self) -> list:
-        return [f'{self.sep}{flag}' for flag in self.ParseFlags()]
+        return [f'{self.sep}{flag}\n' for flag in self.ParseFlags()]
     
     def WriteInCSV(self, path_of_csv: str) -> None:
-        with open(path_of_csv, 'w',encoding='UTF8') as file:
-            writer = csv.writer(file)
-            writer.writerow(self.CreateTimeDoingStroke())
-            writer.writerows(self.CreateFlagsStroke())
-            
+        with open(path_of_csv, 'a',encoding='UTF8') as file:
+            file.write(self.CreateTimeDoingStroke())
+            file.writelines(self.CreateFlagsStroke())
+
+
+    def RefreshCSV(self, path_of_csv: str, header:str) -> None:
+        with open(path_of_csv, 'w') as file:
+            file.write(header + '\n')

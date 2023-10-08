@@ -1,6 +1,8 @@
 import constants;
 import logs_constants as lc;
 
+from parsers.doing_parser import DoingParser
+
 from datetime import time as t;
 
 from telegram import Update
@@ -90,11 +92,20 @@ Function for get user's answer. Parsing and write in csv file(temporary).
 """
 async def doing(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text_doing: str = ' '.join(context.args) 
-    print(text_doing)
+    DoingParser(text_doing).WriteInCSV('./log.csv')
     await context.bot.send_message(
         chat_id = update.effective_chat.id,
         text = f'{lc.LogoutsTags.INFO.value} 0'
     )
+
+
+async def get_statistic(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    chat_id = update.message.chat_id
+    args_password: str = ''.join(context.args)
+    if(args_password == constants.ARG_FOR_GET_STATISTIC):
+        document = open('./log.csv', 'rb')
+        await context.bot.send_document(chat_id=chat_id, document=document)
+    
 
 # main часть
 if __name__ == '__main__':
@@ -109,6 +120,10 @@ if __name__ == '__main__':
     application.add_handler(stop_callback_handler)
     timer_handler = CommandHandler('start_callback', callback_daily)
     application.add_handler(timer_handler)
+
+    #send_static
+    get_statistic_handler = CommandHandler('get_statistic', get_statistic)
+    application.add_handler(get_statistic_handler)
 
 
     
