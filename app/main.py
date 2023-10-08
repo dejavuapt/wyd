@@ -19,7 +19,7 @@ Send message `What are you doing?` to user.
 async def callback_answer(context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(
         chat_id=context.job.chat_id, 
-        text=f'[N] What are you doing, {context.job.data}? '
+        text = f'{lc.LogoutsTags.INFO.value} What are you doing, {context.job.data}?'
         )
     
 
@@ -40,21 +40,27 @@ async def callback_in_day(context: ContextTypes.DEFAULT_TYPE):
 
 """
 Run bot's job every day from `time` time.
+Check if jobs already started
 """
 async def callback_daily(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.message.chat_id
     name = update.effective_chat.full_name
-    
-    context.job_queue.run_daily(
-        callback_in_day,
-        time = t.fromisoformat("06:00:00+05:00"),
-        data = {'name': name, 'chat_id': chat_id},
-        chat_id = chat_id,
-    )
+
+    text_message: str = f'{lc.LogoutsTags.NOTIFICATIONS.value} return '
+    if(len(context.job_queue.jobs()) != 0):
+        text_message += '1 | already launched'
+    else:
+        text_message += '0 | launch'
+        context.job_queue.run_daily(
+            callback_in_day,
+            time = t.fromisoformat("06:00:00+05:00"),
+            data = {'name': name, 'chat_id': chat_id},
+            chat_id = chat_id,
+        )
 
     await context.bot.send_message(
         chat_id = chat_id, 
-        text = f'{lc.LogoutsTags.INFO.value} 0 | start'
+        text = text_message
         )
 
 

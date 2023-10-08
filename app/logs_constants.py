@@ -2,7 +2,7 @@ from enum import Enum
 
 
 class LogoutsTags(Enum):
-    INFO = '[I]'
-    NOTIFICATIONS = '[N]'
-    LOG = '[L]'
-    WARNING = '[W]'
+    INFO :str = '[I]'
+    NOTIFICATIONS :str = '[N]'
+    LOG :str = '[L]'
+    WARNING :str = '[W]'

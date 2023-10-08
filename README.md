@@ -18,7 +18,7 @@ and rename str to your TG bot token
 next updates:
 v0
 - [x] reminder every hour static time
-    - [ ] check if `start_callbalck` call earlier
+    - [x] check if `start_callbalck` call earlier
     - [ ] dynamic set time from command
     - [ ] dynamic set weekday from command
 - [x] stop reminder in today
