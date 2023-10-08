@@ -4,6 +4,7 @@ import logs_constants as lc;
 from parsers.doing_parser import DoingParser
 
 from datetime import time as t;
+from datetime import date as d;
 
 from telegram import Update
 from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler
@@ -14,6 +15,12 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     level=logging.INFO
 )
+# take of a statistic
+CSV_TRACK_PATH = './log.csv'
+
+parser = DoingParser(csv_path=CSV_TRACK_PATH)
+parser.RefreshCSV()
+parser.AddDateRow(d.today())
 
 
 """
@@ -32,6 +39,7 @@ Call -> callback_answer
 Interval -> default 60*60 seconds = 1 hour.
 """
 async def callback_in_day(context: ContextTypes.DEFAULT_TYPE):
+    parser.AddDateRow(d.today())
     context.job_queue.run_repeating(
         callback_answer, 
         interval = constants.INTERVAL_REMINDER, 
@@ -53,7 +61,7 @@ async def callback_daily(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if(len(context.job_queue.jobs()) != 0):
         text_message += '1 | already launched ⏱'
     else:
-        text_message += '0 | launch in the next day ⏱'
+        text_message += '0 | launch soon... ⏱'
         context.job_queue.run_daily(
             callback_in_day,
             time = t.fromisoformat("06:00:00+05:00"),
@@ -92,7 +100,10 @@ Function for get user's answer. Parsing and write in csv file(temporary).
 """
 async def doing(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text_doing: str = ' '.join(context.args) 
-    DoingParser(text_doing).WriteInCSV('./log.csv')
+
+    parser.SetSeparate(text_doing)
+    parser.WriteInCSV()
+    
     await context.bot.send_message(
         chat_id = update.effective_chat.id,
         text = f'{lc.LogoutsTags.INFO.value} 0'
@@ -103,8 +114,10 @@ async def get_statistic(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.message.chat_id
     args_password: str = ''.join(context.args)
     if(args_password == constants.ARG_FOR_GET_STATISTIC):
-        document = open('./log.csv', 'rb')
+        document = open(CSV_TRACK_PATH, 'rb')
         await context.bot.send_document(chat_id=chat_id, document=document)
+        parser.RefreshCSV()
+        
     
 
 # main часть
