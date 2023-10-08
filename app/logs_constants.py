@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class Logouts_tags(Enum):
+class LogoutsTags(Enum):
     INFO = '[I]'
     NOTIFICATIONS = '[N]'
     LOG = '[L]'

@@ -1,4 +1,5 @@
 import constants;
+import logs_constants as lc;
 
 from datetime import time as t;
 
@@ -6,23 +7,27 @@ from telegram import Update
 from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler
 
 
-# Показывает что когда и где работает не так.
 import logging
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     level=logging.INFO
 )
 
-
+"""
+Send message `What are you doing?` to user.
+"""
 async def callback_answer(context: ContextTypes.DEFAULT_TYPE):
-    # Beep the person who called this alarm:
     await context.bot.send_message(
         chat_id=context.job.chat_id, 
-        text=f'[NOTIFICATION] What are you doing, {context.job.data}? '
+        text=f'[N] What are you doing, {context.job.data}? '
         )
     
 
-# напоминалка с утра до вечера каждый час 
+"""
+Run bot's job from `first` time to `last` time, every `interval` seconds.
+Call -> callback_answer
+Interval -> default 60*60 seconds = 1 hour.
+"""
 async def callback_in_day(context: ContextTypes.DEFAULT_TYPE):
     context.job_queue.run_repeating(
         callback_answer, 
@@ -33,15 +38,13 @@ async def callback_in_day(context: ContextTypes.DEFAULT_TYPE):
         chat_id = context.job.data['chat_id'])
 
 
-
+"""
+Run bot's job every day from `time` time.
+"""
 async def callback_daily(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.message.chat_id
     name = update.effective_chat.full_name
-    await context.bot.send_message(
-        chat_id = chat_id, 
-        text = '[INFO] Starting interval job...'
-        )
-    # Set the alarm:
+    
     context.job_queue.run_daily(
         callback_in_day,
         time = t.fromisoformat("06:00:00+05:00"),
@@ -49,22 +52,33 @@ async def callback_daily(update: Update, context: ContextTypes.DEFAULT_TYPE):
         chat_id = chat_id,
     )
 
+    await context.bot.send_message(
+        chat_id = chat_id, 
+        text = f'{lc.LogoutsTags.INFO.value} 0 | start'
+        )
 
+
+"""
+Stop bot's jobs.
+"""
 async def stop_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if(len(context.job_queue.jobs()) > 1):
-        context.job_queue.jobs()[0].schedule_removal() # удаляем тот что дневной если он включен, ажедневный оставляем
+        context.job_queue.jobs()[0].schedule_removal() 
     await context.bot.send_message(
         chat_id = update.effective_chat.id,
-        text = '[INFO] Stop callback. Next tomorrow!'
+        text = f'{lc.LogoutsTags.INFO.value} 0 | stop callback'
     )
 
-#команда деланья
+"""
+Function for get user's answer. Parsing and write in csv file(temporary).
+//TODO not csv -> google sheets
+"""
 async def doing(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    text_doing: str = ' '.join(context.args) # получаем аргументы от команды и дальше уже можно парсировать.
+    text_doing: str = ' '.join(context.args) 
     print(text_doing)
     await context.bot.send_message(
         chat_id = update.effective_chat.id,
-        text = '[INFO] Writed!'
+        text = f'{lc.LogoutsTags.INFO.value} 0'
     )
 
 
