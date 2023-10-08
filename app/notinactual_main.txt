@@ -1,0 +1,51 @@
+Set days for notification.
+Default: (0, 1, 2, 3, 4, 5, 6) # where 0-6 correspond to sunday - saturday
+in template /set_days 0, 1, 2, 3, 4, 5
+"""
+async def set_days(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    text_to_user: str = f'{lc.LogoutsTags.INFO.value}'
+
+    if(len(context.args)!=0):
+        days_by_cin: str = ' '.join(context.args) 
+        try:
+            days_in_tuple: tuple = tuple([int(day) for day in days_by_cin.split(',')]) 
+            # TODO: check that days is right. not < 0 and not > 6
+            text_to_user += ' 0 | set yours days ✍🏻'
+        except:
+            # set default to user setting
+            text_to_user = f'{lc.LogoutsTags.ERROR.value} Result: days set default ✍🏻'
+    else:
+        text_to_user = f'{lc.LogoutsTags.WARNING.value} you\'re not write an arguments. \nPlease, try again. ✍🏻'
+        
+    await context.bot.send_message(
+        chat_id = update.effective_chat.id,
+        text = text_to_user
+    )
+
+"""
+Set time for notification.
+Default: 07:00:00+05:00 | 22:00:00+05:00
+in template /set_time 06:00:00+05:00 | 22:00:00+05:00
+"""
+async def set_time(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    text_to_user: str = f'{lc.LogoutsTags.INFO.value}'
+
+    if(len(context.args)!=0):
+        time_by_cin: str = ' '.join(context.args) 
+        first_time_iso, last_time_iso = tuple(time_by_cin.split('|'))
+        try:
+            first_time: t = t.fromisoformat(first_time_iso)
+            last_time: t = t.fromisoformat(last_time_iso)
+            # TODO: check times that first < last
+            text_to_user += ' 0 | set yours time ✍🏻'
+        except:
+            # set default to user setting
+            text_to_user = f'{lc.LogoutsTags.ERROR.value} Result: times set default ✍🏻'
+    else:
+        text_to_user = f'{lc.LogoutsTags.WARNING.value} you\'re not write an arguments. \nPlease, try again. ✍🏻'
+
+
+    await context.bot.send_message(
+        chat_id = update.effective_chat.id,
+        text = text_to_user
+    )    

@@ -1,6 +1,6 @@
 # Tracking yours doing every hour.
 
-### bot tracking v0.1
+### bot tracking v0.2.1
 
 ```bash
 py -m venv env 
@@ -19,11 +19,12 @@ next updates:
 v0
 - [x] reminder every hour static time
     - [x] check if `start_callbalck` call earlier
-    - [ ] dynamic set time from command
-    - [ ] dynamic set weekday from command
+    `notinactual.txt` -> develop maybe in future, but it's not actual right now
+    - [/n] dynamic set time from command
+    - [/n] dynamic set weekdays from command
 - [x] stop reminder in today
-    - [ ] check if `stop_callbalck` call earlier
-    - [ ] choose stop today reminder or all reminder
+    - [x] check if `stop_callbalck` call earlier
+    - [n] choose stop today reminder or all reminder // not actual
 - [ ] localization
 - [ ] add command to get statistic
 
