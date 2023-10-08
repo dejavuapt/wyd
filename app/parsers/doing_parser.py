@@ -1,6 +1,7 @@
 
 import csv;
 import os;
+from datetime import date;
 
 class DoingParser:
 
@@ -46,3 +47,8 @@ class DoingParser:
     def RefreshCSV(self) -> None:
         with open(self.csv_path, 'w') as file:
             file.write(self.header + '\n')
+
+
+    def AddDateRow(self, current_dt: date) -> None:
+        with open(self.csv_path, 'a',encoding='UTF8') as file:
+            file.write(f'{current_dt.strftime("%d.%m.%y")}{self.sep}{self.sep}{self.sep}')
