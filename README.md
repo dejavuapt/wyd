@@ -1,6 +1,6 @@
 # Tracking yours doing every hour.
 
-### bot tracking v0.2.1
+### bot tracking v1.1.1
 
 ```bash
 py -m venv env 
@@ -26,9 +26,8 @@ v0
     - [x] check if `stop_callbalck` call earlier
     - [n] choose stop today reminder or all reminder // not actual
 - [ ] localization
-- [ ] add command to get statistic
+- [x] add command to get statistic
 
 v1  
-- [ ] parser of `doing` command user text
-    - [ ] template by regex? 
-    - [ ] temperory write in csv file
+- [x] parser of `doing` command user text
+    - [x] temperory write in csv file
